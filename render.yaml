@@ -1,9 +1,8 @@
 services:
   - type: web
-    name: kroatien-trainer
+    name: kroatien-lobby-admin
     env: node
     plan: free
     buildCommand: "npm install"
-    startCommand: "npm start"
+    startCommand: "node server/server.js"
     rootDir: .
-
