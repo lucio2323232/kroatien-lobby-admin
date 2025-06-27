@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>🇭🇷 Kroatien-Trainer</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom right, #ff8c00, #1e90ff);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+    .container {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.4);
+      backdrop-filter: blur(5px);
+      text-align: center;
+    }
+    input, button {
+      padding: 10px;
+      font-size: 1rem;
+      margin: 10px;
+      border-radius: 8px;
+      border: none;
+    }
+    input {
+      width: 60%;
+    }
+    button {
+      background-color: #ffffffcc;
+      color: #000;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #fff;
+    }
+    #footer {
+      margin-top: 20px;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🇭🇷 Kroatien-Trainer</h1>
+    <input type="text" id="username" placeholder="Dein Name eingeben" />
+    <br />
+    <button onclick="joinGame()">Multiplayer starten</button>
+    <button onclick="startSingle()">Einzelspieler starten</button>
+    <div id="lobby" style="display:none;">
+      <h2>🎮 Lobby</h2>
+      <p><strong>Spieler 1:</strong> <span id="player1"></span></p>
+      <p><strong>Spieler 2:</strong> <span id="player2"></span></p>
+      <button onclick="startGame()">Starten</button>
+    </div>
+    <div id="result" style="display:none;"></div>
+    <button onclick="showDatabase()">📊 Datenbank</button>
+    <button onclick="adminPanel()">🛠️ Admin-Panel</button>
+  </div>
+  <div id="footer">Made by Eliott</div>
+  <script>
+    function joinGame() {
+      const name = document.getElementById('username').value;
+      fetch("/join", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name })
+      })
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("lobby").style.display = "block";
+        document.getElementById("player1").textContent = data.player1 || '';
+        document.getElementById("player2").textContent = data.player2 || '';
+      });
+    }
+
+    function startGame() {
+      fetch("/start", { method: "POST" });
+    }
+
+    function startSingle() {
+      alert("📚 Einzelspieler startet bald...");
+    }
+
+    function showDatabase() {
+      fetch("/matches")
+        .then(res => res.json())
+        .then(data => {
+          alert("Spiele:
+" + data.map(m => m.p1 + " vs " + m.p2).join("\n"));
+        });
+    }
+
+    function adminPanel() {
+      window.location.href = "/admin";
+    }
+  </script>
+</body>
+</html>
