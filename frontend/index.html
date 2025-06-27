@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Kroatien Multiplayer</title>
+</head>
+<body>
+  <h1>🇭🇷 Kroatien-Trainer Multiplayer</h1>
+  <input type="text" id="username" placeholder="Dein Name" />
+  <button onclick="joinGame()">Spiel beitreten</button>
+  <div id="lobby" style="display:none;">
+    <h2>Lobby</h2>
+    <p>Spieler 1: <span id="player1"></span></p>
+    <p>Spieler 2: <span id="player2"></span></p>
+    <button onclick="startGame()">Starten</button>
+  </div>
+  <div id="result" style="display:none;"></div>
+  <button onclick="showDatabase()">📊 Datenbank</button>
+  <button onclick="adminPanel()">🛠️ Admin-Panel</button>
+  <script>
+    function joinGame() {
+      const name = document.getElementById('username').value;
+      fetch("/join", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name })
+      })
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("lobby").style.display = "block";
+        document.getElementById("player1").textContent = data.player1 || '';
+        document.getElementById("player2").textContent = data.player2 || '';
+      });
+    }
+
+    function startGame() {
+      fetch("/start", { method: "POST" });
+    }
+
+    function showDatabase() {
+      fetch("/matches")
+        .then(res => res.json())
+        .then(data => {
+          alert("Spiele:
+" + data.map(m => m.p1 + " vs " + m.p2).join("\n"));
+        });
+    }
+
+    function adminPanel() {
+      window.location.href = "/admin";
+    }
+  </script>
+</body>
+</html>
