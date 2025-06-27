@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: kroatien-trainer
+    env: node
+    plan: free
+    buildCommand: "npm install"
+    startCommand: "npm start"
+    rootDir: .
+
